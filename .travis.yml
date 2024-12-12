@@ -15,3 +15,9 @@ after_success:
   - docker build -t hollydevops/multi-nginx -f ./nginx/Dockerfile.dev ./nginx
   - docker build -t hollydevops/multi-server -f ./server/Dockerfile.dev ./server
   - docker build -t hollydevops/multi-worker -f ./worker/Dockerfile.dev ./worker
+  
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push hollydevops/multi-client 
+  - docker push hollydevops/multi-nginx 
+  - docker push hollydevops/multi-server 
+  - docker push hollydevops/multi-worker
