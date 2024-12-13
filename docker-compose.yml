@@ -27,8 +27,5 @@ services:
     image: "hollydevops/multi-nginx"
     mem_limit: 128m
     hostname: nginx
-    depends_on:
-      - api
-      - client
     ports:
       - "80:80"
