@@ -1,0 +1,35 @@
+sudo: required
+language: generic 
+
+services:
+  - docker
+
+before_install: 
+  - docker build -t hollydevops/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true hollydevops/react-test npm test
+
+after_success:
+  - docker build -t hollydevops/multi-client -f ./client/Dockerfile.dev ./client
+  - docker build -t hollydevops/multi-nginx -f ./nginx/Dockerfile.dev ./nginx
+  - docker build -t hollydevops/multi-server -f ./server/Dockerfile.dev ./server
+  - docker build -t hollydevops/multi-worker -f ./worker/Dockerfile.dev ./worker
+  
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push hollydevops/multi-client 
+  - docker push hollydevops/multi-nginx 
+  - docker push hollydevops/multi-server 
+  - docker push hollydevops/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "multicontainer-docker"
+  env: "Multicontainer-docker-env"
+  bucket_name: "elasticbeanstalk-us-east-1-490004614696"
+  bucket_path: "multicontainer-docker"
+  on:
+    branch: main
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
