@@ -2,11 +2,11 @@ version: "3"
 services:
   client:
     image: "hollydevops/multi-client"
-    mem_limit: 128m
+    mem_limit: 256m
     hostname: client
   server:
     image: "hollydevops/multi-server"
-    mem_limit: 256m
+    mem_limit: 128m
     hostname: api
     environment:
       - REDIS_HOST=$REDIS_HOST
