@@ -11,10 +11,10 @@ script:
   - docker run -e CI=true hollydevops/react-test npm test
 
 after_success:
-  - docker build -t hollydevops/multi-client -f ./client/Dockerfile.dev ./client
-  - docker build -t hollydevops/multi-nginx -f ./nginx/Dockerfile.dev ./nginx
-  - docker build -t hollydevops/multi-server -f ./server/Dockerfile.dev ./server
-  - docker build -t hollydevops/multi-worker -f ./worker/Dockerfile.dev ./worker
+  - docker build -t hollydevops/multi-client ./client
+  - docker build -t hollydevops/multi-nginx ./nginx
+  - docker build -t hollydevops/multi-server ./server
+  - docker build -t hollydevops/multi-worker ./worker
   
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push hollydevops/multi-client 
